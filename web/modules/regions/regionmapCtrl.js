@@ -106,20 +106,27 @@ controllersModule.controller('regionmapController', function ($scope, $routePara
 			google.maps.event.addListener(triangle, 'click', function (event) {
 				$scope.currentPolygon = this;
                 
-                var contentString = '<b>'+this.name+'</b><br>' +
-                  'Код: ' + this.code +
-                  '<br>';
-                infoWindow.setContent(contentString);
-                infoWindow.setPosition(event.latLng);
-
-                infoWindow.open(vm.map);
+                
+				
+                
                 
                 regionResourceSrvc.getAll($scope.currentPolygon.id).then(
                 function(data){
+						var contentString = '<b>'+$scope.currentPolygon.name+'</b><br>' +
+						'Код: ' + $scope.currentPolygon.code +
+						'<br>' + 'Список ресурсов: ' + '<br><br>';
+						
                         for(var i = 0; i < data.data.children.length; i++){
-                            var parsedResource = JSON.parse(data.data.children[i]);
-                            $resourcesInTable.push(parsedResource);
+                            var parsedResource = data.data.children[i];
+                            $scope.resourcesInTable.push(parsedResource);
+							contentString += ''+parsedResource.name+'<br>';
                         }
+						
+						
+						infoWindow.setContent(contentString);
+						infoWindow.setPosition(event.latLng);
+
+						infoWindow.open(vm.map);
                 },
                 function(data, status, headers, config){
                     }

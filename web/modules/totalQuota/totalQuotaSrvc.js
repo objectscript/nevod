@@ -8,8 +8,8 @@
 servicesModule.factory('totalQuotaSrvc', function(RESTSrvc,settings) {    
     return {
     	/* Все регионы */
-        getAll: function(){
-            return RESTSrvc.getPromise({method: 'GET', url: settings.server + 'regions'});
+        getAllResources: function(){
+            return RESTSrvc.getPromise({method: 'GET', url: settings.server + 'resourcies'});
         },
         /* Все группы факультета */
         /* getRegions: function(id){

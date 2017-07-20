@@ -1,41 +1,30 @@
-<!-- <div class="container" ng-init="init()">
-	<label for="table"><h2>Ресурсы:</h2></label>
-
-	<table id="table" class="table-fixed table table-condensed table-hover ">
-
-		<thead>
-			<tr>
-				<th class="">#</th>
-				<th>Ресурс</th>
-				<th>Лимит</th>
-				<th>Дата с</th>
-				<th>Дата по</th>
-				<th>Действия</th>
-			</tr>
-
-		</thead>
-
-		<tbody>
-
-			<tr ng-repeat="x in regions">
-				<td>{{ $index + 1 }}</td>
-				<td>{{ x.name }}</td>
-				<td>{{ x.name }}</td>
-				<td>{{ x.name }}</td>
-				<td>{{ x.name }}</td>
-				<td>
-					<button type="button" class="btn btn-sm btn-primary glyphicon glyphicon-pencil" ng-click="editRegion(x.id)" title="Редактировать"></button>
-					<button type="button" class="btn btn-sm btn-danger glyphicon glyphicon-remove" ng-click="removeRegion(x)" title="Удалить"></button>
-					<button type="button" class="btn btn-sm btn-danger glyphicon glyphicon-remove" ng-click="deleteRegion(x.id)" title="Редактировать лимиты"></button>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<button type="button" class="btn btn-lg btn-primary glyphicon glyphicon-plus" ng-click="addRegion()" title="Добавить новый регион"></button>
-</div> -->
 <div class="container" ng-init="init()">
-   <div class="row" ng-show="hidder">
-    <table class="table table-fixed table-condensed table-hover">
+  <table>
+    <thead>
+      <tr>
+        <th for=regname class="col-xs-4">
+          <h4>Имя региона</h4>
+        </th>
+        <th for=regcode class="col-xs-3">
+          <h4>Код региона</h4>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-xs-4" id=regname>
+          <h3>{{ currentRegion.name }}</h3>
+        </td>
+        <td class="col-xs-3" id=regcode>
+          <h3>{{ currentRegion.code }}</h3>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="height: 50px"></div>
+  <div class="row" ng-show="hidder">
+    <table class="table table-fixed table-condensed table-hover" id=table>
       <thead>
         <tr>
           <th class="col-xs-1">#</th>
@@ -47,27 +36,37 @@
 
         </tr>
       </thead>
-      <tbody style="height: 500px">
-        <tr ng-repeat="x in regions" class="col-xs-12">
+      <tbody style="height: 350px">
+        <tr ng-repeat="x in resources" class="col-xs-12">
 
           <td class="col-xs-1">{{ $index + 1 }}</td>
-          <td class="col-xs-2">{{ x.name }}</td>
-          <td class="col-xs-2">{{ x.name }}</td>
-          <td class="col-xs-2">{{ x.name }}</td>
-          <td class="col-xs-3">{{ x.name }}</td>
+          <td class="col-xs-2">{{ x[0] }}</td>
+          <td class="col-xs-2">{{ x[1] }}</td>
+          <td class="col-xs-2" >{{ x[2].getDate() }}/{{ x[2].getMonth() }}/{{ x[2].getFullYear() }}</td>
+          <td class="col-xs-3" >{{ x[3].getDate() }}/{{ x[3].getMonth() }}/{{ x[3].getFullYear() }}</td>
           <td class="col-xs-2">
-            <button type="button" class="btn btn-xs btn-primary" ng-click="hide()" title="Редактировать">Редактировать</button>
+            <button type="button" class="btn btn-xs btn-primary" ng-click="hide(x)" title="Редактировать">Редактировать</button>
           </td>
 
         </tr>
       </tbody>
     </table>
-    <button type="button" class="btn btn-lg btn-primary" ng-click="editRegion(x.id)" title="Создать">Создать</button>
+    <button type="button" class="btn btn-lg btn-primary" ng-click="hide()" title="Создать">Создать</button>
   </div>
   <div class="row" ng-hide="hidder">
-    <h1>Прив
-      <button type="button" class="btn btn-lg btn-primary" ng-click="hide()" title="Редактировать">Пок</button>
-  </div> 
-    
+    <div class="form-group">
+      <label for="usr">Название:</label>
+      <input type="text" ng-model="name" class="form-control" id="usr"></input>
+      <label for="usr">Код:</label>
+      <input type="text" ng-model="code" class="form-control" id="usr"></input>
+      <label for="usr">Дата с:</label>
+      <input type="date" ng-model="timeFrom" class="form-control" id="usr"></input>
+      <label for="usr">Дата по:</label>
+      <input type="date" ng-model="timeTo" class="form-control" id="usr"></input>
+      
+    </div>
+    <button type="button" class="btn btn-lg btn-primary" ng-click="save()" title="Редактировать">Пок</button>
   </div>
+
+</div>
 </div>

@@ -13,11 +13,11 @@ servicesModule.factory('regionResourceSrvc', function(RESTSrvc,settings) {
         },
 		/*Сохранить ресурс для региона*/
 		saveResource: function(idReg, idRes){
-			return RESTSrvc.getPromise({method: 'POST', url: settings.server + 'regionresource/' + idReg + '&' + idRes});
+			return RESTSrvc.getPromise({method: 'POST', url: settings.server + 'setresreg/' + idReg + '/' + idRes});
 		},
 		/* Удалить регион по ИД */
 		removeResource: function(idReg, idRes){
-			return RESTSrvc.getPromise({method: 'DELETE', url: settings.server + 'regionresource/' + idReg + '&' + idRes});
+			return RESTSrvc.getPromise({method: 'DELETE', url: settings.server + 'delresreg/' + idReg + '/' + idRes});
 		},
     }
 });

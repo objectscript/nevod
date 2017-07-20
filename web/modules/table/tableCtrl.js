@@ -5,6 +5,9 @@ controllersModule.controller('tableController', function ($scope,$location, regi
 	$scope.editRegion = function (id) {
 		$location.path('/region/'+id).replace();
 	}
+	$scope.editLimits = function (id) {
+		$location.path('/tquota/'+id).replace();
+	}
 
 	$scope.removeRegion = function (item) {
 		$scope.regions.splice($scope.regions.indexOf(item),1);

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.1 (Build 792U)" ts="2017-07-20 11:34:58">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.1 (Build 792U)" ts="2017-07-20 14:43:47">
 <Class name="fishnet.Broker">
 <Super>%CSP.REST</Super>
-<TimeChanged>64484,41666.792508</TimeChanged>
+<TimeChanged>64484,52858.662801</TimeChanged>
 <TimeCreated>64481,38930.754632</TimeCreated>
 
 <Parameter name="HandleCorsRequest">
@@ -31,6 +31,7 @@
 <!--*************Ресурсы****************** -->
 <Route Url="/resourcies" Method="GET" Call="GetResourcies"/>
 <Route Url="/saveres" Method="POST" Call="SaveResource"/>
+<Route Url="/delresource" Method="DELETE" Call="DeleteResource" />
 
 <!-- ***************Квоты******************-->
 <Route Url="/quota/save" Method="POST" Call="SaveQuota"/>
@@ -39,8 +40,11 @@
 <!-- ***********Регион-ресурсы**************** -->
 <Route Url="/getresreg/:idRegion" Method="GET" Call="GetAllResForRegion" />
 <Route Url="/setresreg/:idRegion/:idResource" Method="POST" Call="SetResourceForRegion" />
-<Route Url="/delresreg/:idRegion/:idResource" Method="DELETE " Call="DelResource" />
+<Route Url="/delresreg/:idRegion/:idResource" Method="DELETE" Call="DelResource" />
 
+<!-- **********TotalQuota**********************-->
+<Route Url="/savetotalq" Method="POST" Call="SaveTotalQuota" />
+<Route Url="/getalltotalqreg/:id" Method="GET" Call="GetAllTotalQuotaForReg" />
 
 
 </Routes>
@@ -169,6 +173,16 @@
 ]]></Implementation>
 </Method>
 
+<Method name="DeleteResource">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+   do ##class(fishnet.Resource).DeleteResource(id)
+   q $$$OK
+]]></Implementation>
+</Method>
+
 <UDLText name="T">
 <Content><![CDATA[/*----------------------------Квоты-------------------------------*/
 ]]></Content>
@@ -224,6 +238,30 @@
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
   d ##class(fishnet.RegionResource).DelResource(idReg,idRes)
+  q $$$OK
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[/* -----------------------TotalQuota ----------------------------------  */
+]]></Content>
+</UDLText>
+
+<Method name="SaveTotalQuota">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  d ##class(fishnet.TotalQuota).SaveTotalQuota()
+  q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetAllTotalQuotaForReg">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idReg:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  d ##class(fishnet.TotalQuota).GetAllTotalQuotaForReg(idReg)
   q $$$OK
 ]]></Implementation>
 </Method>

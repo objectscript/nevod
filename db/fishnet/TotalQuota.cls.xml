@@ -48,6 +48,17 @@
 ]]></Implementation>
 </Method>
 
+<Method name="GetAllTotalQuotaForReg">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idReg:%String</FormalSpec>
+<Implementation><![CDATA[
+	set sql = "SELECT regionResource->region->ID, value, startDate, endDate, regionResource->resource->code, regionResource->resource->name "_
+		"FROM fishnet.TotalQuota "_
+		"WHERE regionResource->region->ID="_idReg_" "
+	q ##class(%ZEN.Auxiliary.jsonSQLProvider).%WriteJSONFromSQL(,sql)
+]]></Implementation>
+</Method>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^fishnet.TotalQuotaD</DataLocation>
