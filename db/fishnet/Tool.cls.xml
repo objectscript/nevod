@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.1 (Build 792U)" ts="2017-07-19 14:49:56">
+<Class name="fishnet.Tool">
+<Super>%Persistent</Super>
+<TimeChanged>64483,51735.264836</TimeChanged>
+<TimeCreated>64481,59483.381763</TimeCreated>
+
+<Property name="code">
+<Type>%String</Type>
+</Property>
+
+<Property name="name">
+<Type>%String</Type>
+<Parameter name="MAXLEN"/>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^fishnet.ToolD</DataLocation>
+<DefaultData>ToolDefaultData</DefaultData>
+<IdLocation>^fishnet.ToolD</IdLocation>
+<IndexLocation>^fishnet.ToolI</IndexLocation>
+<StreamLocation>^fishnet.ToolS</StreamLocation>
+<Data name="ToolDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>name</Value>
+</Value>
+<Value name="3">
+<Value>code</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

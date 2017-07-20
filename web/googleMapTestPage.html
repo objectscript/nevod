@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  
+    <title>Simple Map</title>
+    <meta charset="utf-8">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKWojtxkjHuh44CNE8mw9S-nX3qWeLHGM&callback=initMap"
+    async defer></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	
+  </head>
+  <body>
+	
+	<nav class="navbar navbar-inverse">
+	  <div class="container-fluid">
+	  
+		<div class="navbar-header">
+		  <a class="navbar-brand" href="#">WebSiteName</a>
+		</div>
+		
+		<ul class="nav navbar-nav">
+		  <li class="active"><a href="#">Home</a></li>
+		  <li><a href="#">Page 1</a></li>
+		  <li><a href="#">Page 2</a></li>
+		  <li><a href="#">Page 3</a></li>
+		</ul>
+		
+	  </div>
+	</nav>
+	
+	<div class = "container">
+		<div class = "row">
+		
+			<div class = "col-sm-6">
+				<div id="googleMap" style="width:100%;height:400px;"></div>
+			</div>
+			
+			<div class = "col-sm-6">
+				<div class="form-group">
+					<label for="usr">Id:</label>
+					<input type="text" class="form-control" id="usr">
+				</div>
+				<button type="button" class="btn btn-default">Открыть</button>
+				<button type="button" class="btn btn-primary" onclick="savePolygon()">Сохранить</button>
+				<button type="button" class="btn btn-success" onclick="deletePolygon()">Удалить</button>
+				<button type="button" class="btn btn-info" onclick="editPolygon()">Редактировать</button>
+				<button type="button" class="btn btn-warning" onclick="createPolygon()">Создать</button>
+			</div>
+			
+		</div>
+	</div>
+	
+	<script>
+		var map;
+		var currentPolygon = "";
+			
+		function isPolygonChosen()
+		{
+			if(currentPolygon != "") return true;
+			else return false;
+		}
+		
+		function deletePolygon()
+		{
+			if(isPolygonChosen())
+			{
+				currentPolygon.setMap(null);
+				currentPolygon = "";
+			}
+			else
+			{
+				alert("No polygons chosen");
+			}
+		}
+		
+		function savePolygon()
+		{
+			if(isPolygonChosen())
+			{
+				currentPolygon.setOptions({editable:false});
+				
+				var vertices = currentPolygon.getPath();
+				var polygonPoints = [];
+				for (var i = 0; i < vertices.length; i++) 
+				{
+					var xy = vertices.getAt(i);
+					polygonPoints.push({ lat: xy.lat(), lon: xy.lng() });
+				}
+				currentPolygon = "";
+				return polygonPoints;
+			}
+			else
+			{
+				alert("No polygons chosed");
+			}
+		}
+		
+		function initMap() 
+		{
+			var mapProp = {
+				center:new google.maps.LatLng(24.886, -70.268),
+				zoom:1,
+			};
+			map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+		}
+		
+		function editPolygon()
+		{
+			if(isPolygonChosen()) currentPolygon.setOptions({ editable:true });
+			else alert("No polygons chosen");
+		}
+		
+		function createPolygon()
+		{
+			var mapCenterCoords = map.getCenter();
+			var lat = mapCenterCoords.lat();
+			var lng = mapCenterCoords.lng();
+			var mapZoom = map.getZoom();
+			var scaling = 5/mapZoom; 
+			
+			var triangleCoords = [
+			  {lat: lat+scaling, lng: lng},
+			  {lat: lat-scaling, lng: lng+scaling},
+			  {lat: lat-scaling, lng: lng-scaling}  
+			];
+			
+			var triangle = new google.maps.Polygon({
+			  paths: triangleCoords,
+			  strokeColor: '#FF0000',
+			  strokeOpacity: 0.8,
+			  strokeWeight: 2,
+			  fillColor: '#FF0000',
+			  fillOpacity: 0.35,
+			  indexID: 1,
+			  someother: "yes"
+			});
+			
+			google.maps.event.addListener(triangle, 'click', function (event){
+				currentPolygon = triangle;
+			});  
+			
+			triangle.setMap(map);
+		}
+	</script>
+  </body>
+</html>

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.1 (Build 792U)" ts="2017-07-20 11:34:58">
+<Class name="fishnet.Broker">
+<Super>%CSP.REST</Super>
+<TimeChanged>64484,41666.792508</TimeChanged>
+<TimeCreated>64481,38930.754632</TimeCreated>
+
+<Parameter name="HandleCorsRequest">
+<Default>1</Default>
+</Parameter>
+
+<XData name="UrlMap">
+<Data><![CDATA[
+<Routes>
+
+<!-- **********Тесты***************** -->
+<Route Url="/test" Method="GET" Call="Test"/>
+
+ <!-- *********Регионы*************** -->
+<Route Url="/region/:id" Method="GET" Call="GetRegion"/>
+<Route Url="/regions" Method="GET" Call="GetRegions"/>
+<Route Url="/region/save" Method="POST" Call="SaveRegion"/>
+<Route Url="/region/:id" Method="DELETE" Call="DeleteRegion"/>
+
+<!-- _***********Компании*************** -->
+<Route Url="/company/:id" Method="GET" Call="GetCompany" />
+<Route Url="/companies" Method="GET" Call="GetCompanies" />
+<Route Url="/savereq" Method="POST" Call="SaveRequisetesCompany" />
+<Route Url="/savereg" Method="POST" Call="SaveRegionOfCompany"/>
+
+<!--*************Ресурсы****************** -->
+<Route Url="/resourcies" Method="GET" Call="GetResourcies"/>
+<Route Url="/saveres" Method="POST" Call="SaveResource"/>
+
+<!-- ***************Квоты******************-->
+<Route Url="/quota/save" Method="POST" Call="SaveQuota"/>
+<Route Url="/quota/company/:id" Method="GET" Call="GetQuotasByCompanyId"/>
+
+<!-- ***********Регион-ресурсы**************** -->
+<Route Url="/getresreg/:idRegion" Method="GET" Call="GetAllResForRegion" />
+<Route Url="/setresreg/:idRegion/:idResource" Method="POST" Call="SetResourceForRegion" />
+<Route Url="/delresreg/:idRegion/:idResource" Method="DELETE " Call="DelResource" />
+
+
+
+</Routes>
+]]></Data>
+</XData>
+
+<UDLText name="T">
+<Content><![CDATA[/*---------------------------Тесты-----------------------------------*/
+]]></Content>
+</UDLText>
+
+<Method name="Test">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    w "{'Status':'OK'}"
+    q $$$OK
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[/*--------------------------Регионы-----------------------------------*/
+]]></Content>
+</UDLText>
+
+<Method name="GetRegion">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  w ##class(fishnet.Region).GetRegion(id)
+  q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="SaveRegion">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  d ##class(fishnet.Region).SaveRegion()
+  q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetRegions">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  w ##class(fishnet.Region).GetRegions()
+  q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="DeleteRegion">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  d ##class(fishnet.Region).DeleteRegion(id)
+  q $$$OK
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[/*-----------------------------Компании-------------------------------*/
+]]></Content>
+</UDLText>
+
+<Method name="GetCompany">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  w ##class(fishnet.Company).GetCompanyById(id)
+  q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetCompanies">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+   w ##class(fishnet.Company).GetCompanies()
+   q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="SaveRequisetesCompany">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  d ##class(fishnet.Company).SaveRequisetesCompany()
+  q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="SaveRegionOfCompany">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  d ##class(fishnet.Company).SaveRegionOfCompany()
+  q $$$OK
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[/*-----------------------------Ресурсы------------------------------*/
+]]></Content>
+</UDLText>
+
+<Method name="GetResourcies">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  w ##class(fishnet.Resource).GetResourcies()
+  q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="SaveResource">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  d ##class(fishnet.Resource).SaveResource()
+  q $$$OK
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[/*----------------------------Квоты-------------------------------*/
+]]></Content>
+</UDLText>
+
+<Method name="SaveQuota">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  d ##class(fishnet.Quota).SaveQuotas()
+  q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetQuotasByCompanyId">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>companyId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  w ##class(fishnet.Quota).GetQuotasByCompanyId(companyId)
+  q $$$OK
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[/*  --------------------Регион-ресурсы----------------------------*/
+]]></Content>
+</UDLText>
+
+<Method name="GetAllResForRegion">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idReg:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  w ##class(fishnet.RegionResource).GetAllResForReg(idReg)
+  q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="SetResourceForRegion">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idReg:%String,idRes:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  d ##class(fishnet.RegionResource).SetResourceForRegion(idReg, idRes)
+  q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="DelResource">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idReg:%String,idRes:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  d ##class(fishnet.RegionResource).DelResource(idReg,idRes)
+  q $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

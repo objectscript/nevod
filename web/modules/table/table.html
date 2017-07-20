@@ -1,0 +1,32 @@
+<div class="container" ng-init = "init()">
+    <div style="display:table-cell; height:80px; vertical-align:middle;">
+      <span style="font-size: 28px;font-weight: 700;">Регионы</font>
+        <button type="button" class="btn btn-primary glyphicon glyphicon-plus" ng-click="addRegion()" title="Добавить новый регион"></button>
+        <button type="button" class="btn btn-info glyphicon glyphicon-globe" ng-click="openRegionsMap()" title="Картографическое отображение"></button>
+    </div>
+        
+  <table class="table table-condensed table-hover">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Название региона</th>
+        <th>Код региона</th>
+		<th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+		<tr ng-repeat="x in regions">
+			<td>{{ $index + 1 }}</td>
+			<td>{{ x.name }}</td>
+
+			<td>{{ x.code }}</td>
+			<td>
+				<button type="button" class="btn btn-primary glyphicon glyphicon-pencil" ng-click="editRegion(x.id)" title="Редактировать"></button>
+				<button type="button" class="btn btn-danger glyphicon glyphicon-remove" ng-click="removeRegion(x)" title="Удалить"></button>
+				<button type="button" class="btn btn-success glyphicon glyphicon-list-alt" ng-click="" title="Редактировать лимиты"></button>
+			</td>
+		</tr>
+    </tbody>
+  </table>
+  <button type="button" class="btn btn-primary glyphicon glyphicon-plus" ng-click="addRegion()" title="Добавить новый регион"></button>
+</div>

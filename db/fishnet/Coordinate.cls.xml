@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.1 (Build 792U)" ts="2017-07-19 14:27:17">
+<Class name="fishnet.Coordinate">
+<StorageStrategy/>
+<Super>%SerialObject,%Populate</Super>
+<TimeChanged>64483,47443</TimeChanged>
+<TimeCreated>64479,59415.226035</TimeCreated>
+
+<UDLText name="T">
+<Content><![CDATA[
+// Широта
+
+]]></Content>
+</UDLText>
+
+<Property name="latitude">
+<Type>%Decimal</Type>
+<Parameter name="SCALE" value="7"/>
+</Property>
+
+<UDLText name="T">
+<Content><![CDATA[
+// Долгота
+
+]]></Content>
+</UDLText>
+
+<Property name="longtude">
+<Type>%Decimal</Type>
+<Parameter name="SCALE" value="7"/>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheSerialState</Type>
+<State>CoordinateState</State>
+<StreamLocation>^fishnet.CoordinateS</StreamLocation>
+<Data name="CoordinateState">
+<Value name="1">
+<Value>latitude</Value>
+</Value>
+<Value name="2">
+<Value>longtude</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

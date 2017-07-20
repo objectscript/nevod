@@ -1,0 +1,66 @@
+<div class="container">
+    <div class="row">
+
+
+        <div class="col-sm-6" map-lazy-load="https://maps.google.com/maps/api/js" map-lazy-load-params="{{googleMapsUrl}}">
+            <ng-map center="41,-87" zoom="3" style="height: 500px; display:block; ">
+            </ng-map>
+        </div>
+
+
+        <div class="col-sm-6">
+            <br/>
+            <p align="right">
+                <button type="button" class="btn" ng-click="backToRegionList()">Назад</button>
+            </p>
+            <div class="form-group">
+                <label for="usr">Название:</label>
+                <input type="text" ng-model="name" class="form-control" id="usr"></input>
+                <label for="usr">Код:</label>
+                <input type="text" ng-model="code" class="form-control" id="usr"></input>
+            </div>
+            <button type="button" class="btn btn-default" ng-click="openPolygon()" ng-if="regionEdit">Открыть</button>
+            <button type="button" class="btn btn-primary" ng-click="savePolygon()">Сохранить</button>
+            <button type="button" class="btn btn-success" ng-click="deletePolygon()" ng-if="regionEdit">Удалить</button>
+            <button type="button" class="btn btn-info" ng-click="editPolygon()">Редактировать</button>
+            <button type="button" class="btn btn-warning" ng-click="createPolygon()" ng-if="regionEdit">Создать</button>
+
+            <button type="button" class="btn btn-warning" ng-click="showResourceTable()">Ресурсы</button>
+            <br/>
+            <br/>
+            <div class="resource-details" ng-show="showResources">
+
+                <div class="col-sm-12 input-group">
+                    <select class="form-control" ng-model="currentResource" ng-options="resource.name + ' (' + resource.code + ')' group by resource.name for resource in resources">
+				    </select>
+                    <span class="input-group-btn">
+				        <button type="button" class="btn btn-success glyphicon glyphicon-plus" ng-click="addResource()" title="Добавить ресурс"></button>
+                    </span>
+                </div>
+                <br/><br/>
+                <table class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Название ресурса</th>
+                            <th>Код ресурса</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="x in resourcesInTable track by x.name">
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ x.name }}</td>
+                            <td>{{ x.code }}</td>
+                            <td>
+                                <button type="button" class="btn btn-danger  btn-sm glyphicon glyphicon-remove" ng-click="removeResource($index.code)" title="Удалить"></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+</div>
