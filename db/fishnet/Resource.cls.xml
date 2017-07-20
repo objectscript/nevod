@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="fishnet.Resource">
+<Super>%Persistent</Super>
+<TimeCreated>64481,59379.543987</TimeCreated>
+
+<Property name="code">
+<Type>%String</Type>
+</Property>
+
+<Property name="name">
+<Type>%String</Type>
+<Parameter name="MAXLEN"/>
+</Property>
+
+<Property name="regions">
+<Type>fishnet.RegionResource</Type>
+<Cardinality>many</Cardinality>
+<Inverse>resource</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Method name="GetResourcies">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	
+	set st = $$$OK	
+	try{
+		set proxy = []	
+		&sql(DECLARE ReCur CURSOR FOR 
+		 	 SELECT ID
+		 	 FROM fishnet.Resource)	
+		
+		&sql(OPEN ReCur)
+		for  
+		{	
+			&sql(FETCH ReCur INTO :id) 
+			quit:(SQLCODE '= 0)
+			do proxy.%Push(##class(fishnet.Resource).%OpenId(id).ResourceToJSON())
+		}		
+		&sql(CLOSE ReCur)		
+	}
+	catch (ex){
+		set st = ex.AsStatus()
+	}	
+	q proxy.%ToJSON()
+]]></Implementation>
+</Method>
+
+<Method name="SaveResource">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	set st = $$$OK
+		
+	try{	
+	
+	$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data,1))
+      	// Open object by ID
+      	set res = ##class(fishnet.Resource).%OpenId(data.id,,.st)    	
+      	// If can't open-create new
+      	if $$$ISERR(st) set res = ##class(fishnet.Resource).%New()
+      	set res.name = $ZCONVERT(data.name, "I", "UTF8")
+      	set res.code = $ZCONVERT(data.code, "I", "UTF8")
+      	
+      	// ... for other property
+      	     		
+		$$$THROWONERROR(st, res.%Save())
+	}
+	catch ex{
+		s st=st.AsStatus()
+	}
+]]></Implementation>
+</Method>
+
+<Method name="DeleteResource">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	 do ##class(fishnet.Resource).%DeleteId(id)
+]]></Implementation>
+</Method>
+
+<Method name="ResourceToJSON">
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+ set resource = $this
+ set proxy = {}
+ set proxy.id = resource.%Id()
+ set proxy.name = resource.name
+ set proxy.code = resource.code
+ 
+ // ... for other property
+ 
+ quit proxy.%ToJSON()
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^fishnet.ResourceD</DataLocation>
+<DefaultData>ResourceDefaultData</DefaultData>
+<IdLocation>^fishnet.ResourceD</IdLocation>
+<IndexLocation>^fishnet.ResourceI</IndexLocation>
+<StreamLocation>^fishnet.ResourceS</StreamLocation>
+<Data name="ResourceDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>name</Value>
+</Value>
+<Value name="3">
+<Value>code</Value>
+</Value>
+<Value name="4">
+<Value>regions</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

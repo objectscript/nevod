@@ -1,0 +1,45 @@
+<div>
+    <link rel="stylesheet" href="modules/header/header.css" />
+    <div id="header" class="navbar navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <a class="navbar-brand" href="#">
+                    <img src="imgs/logofull.png" width="150px">
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="navbar-item" ng-repeat="item in items" ng-class="{active: isCurrentPath(item)}">
+                        <a class="navbar-href" ng-href="{{item.items ? 'javascript:' : '#!' + item.path}}">
+                            <img ng-src="imgs/{{::item.img}}" class="navbar-img" />
+                            <span class="navbar-content">{{::item.title}}</span>
+                        </a>
+                        <ul class="navbar-list" ng-if="item.items">
+                            <li ng-repeat="subitem in item.items" ng-class="{active: isCurrentPath(subitem)}">
+                                <a class="navbar-list-href" ng-href="#!{{::subitem.path}}">
+                                    <span class="navbar-list-content">{{::subitem.title}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="navbar-item" style="text-align: right;">
+                        <a class="navbar-href" href="#" style="max-width: 220px;">
+                            <span class="navbar-content" style="padding: 0">
+								<span >Администратор</span><br/>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

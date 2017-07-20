@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>"FISHNET"</title>
+
+    <link rel="stylesheet" type="text/css" href="style/bootstrap-3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="style/bootstrap-3.3.7/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="style/main.css" />
+    <link rel="stylesheet" type="text/css" href="style/table-fixed.css" />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKWojtxkjHuh44CNE8mw9S-nX3qWeLHGM"></script>
+</head>
+
+<body ng-app="mainModule">
+
+   <header-navbar></header-navbar>
+
+    <div class="view-container">
+        <div ng-view class="view-frame"></div>
+    </div>
+
+    <script src="lib/jquery-3.2.1/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="lib/angular-1.6.4/angular.min.js"></script>
+    <script type="text/javascript" src="lib/ng-map/ng-map.min.js"></script>
+
+    <script type="text/javascript" src="lib/angular-1.6.4/angular-route.min.js"></script>
+
+    <script type="text/javascript" src="lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="modules/main/master.js"></script>
+    <script type="text/javascript" src="modules/main/RESTSrvc.js"></script>
+    <script type="text/javascript" src="modules/header/header.js"></script>
+
+    <script type="text/javascript" src="modules/regions/regionCtrl.js"></script>
+    <script type="text/javascript" src="modules/table/tableCtrl.js"></script>
+    <script type="text/javascript" src="modules/table/tableCompanyCtrl.js"></script>
+    <script type="text/javascript" src="modules/resources/resourceCtrl.js"></script>
+    <script type="text/javascript" src="modules/company/companyCtrl.js"></script>
+	<script type="text/javascript" src="modules/totalQuota/totalQuotaCtrl.js"></script>
+    <script type="text/javascript" src="modules/regions/regionmapCtrl.js"></script>
+    
+    
+	<script type="text/javascript" src="modules/resources/resourceSrvc.js"></script>
+    <script type="text/javascript" src="modules/regions/regionSrvc.js"></script>
+    <script type="text/javascript" src="modules/company/companySrvc.js"></script>
+	<script type="text/javascript" src="modules/totalQuota/totalQuotaSrvc.js"></script>
+	<script type="text/javascript" src="modules/regionResource/regionResourceSrvc.js"></script>
+
+	
+    <!-- <script src="modules/resources/resourceSrvc.js"></script> -->
+</body>
+
+</html>

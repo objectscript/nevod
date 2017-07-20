@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="fishnet.Quota">
+<Super>%Persistent</Super>
+<TimeCreated>64481,59419.500162</TimeCreated>
+
+<Property name="value">
+<Type>%Float</Type>
+</Property>
+
+<Property name="startDate">
+<Type>%Date</Type>
+</Property>
+
+<Property name="endDate">
+<Type>%Date</Type>
+</Property>
+
+<Property name="regionResource">
+<Type>fishnet.RegionResource</Type>
+</Property>
+
+<Property name="company">
+<Type>fishnet.Company</Type>
+<Cardinality>one</Cardinality>
+<Inverse>quotas</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Method name="SaveQuotas">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	set st = $$$OK		
+	try{		
+	$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data,1))  		
+	    // Open object by Id
+	    set quota = ##class(fishnet.Quota).%OpenId(data.id,,.st)
+      	// If can't open by Id-create new region
+      	if $$$ISERR(st) set quota = ##class(fishnet.Quota).%New()
+      	set quota.value = $ZCONVERT(data.value, "I", "UTF8")
+      	do quota.regionResource.Clear()
+      	set quota.regionResource = $ZCONVERT(data.regionResource, "I", "UTF8")	
+      	do quota.regionResource.Clear()
+      	set quota.company = $ZCONVERT(data.company, "I", "UTF8")
+      	do quota.startDate.Clear()
+      	set quota.startDate = $ZCONVERT(data.startDate, "I", "UTF8")
+      	do quota.endDate.Clear()
+      	set quota.endDate = $ZCONVERT(data.endDate, "I", "UTF8")   	
+		$$$THROWONERROR(st, quota.%Save())
+	}
+	catch ex{
+		s st=st.AsStatus()
+	}
+]]></Implementation>
+</Method>
+
+<Method name="GetQuotasByCompanyId">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>companyId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	
+	set st = $$$OK	
+	try{
+		set proxy = []		
+		&sql(DECLARE QoCur CURSOR FOR 
+		 	 SELECT ID 
+ 			 FROM fishnet.Quota 
+ 			 WHERE company = :companyId
+ 			 ORDER BY company )	
+		
+		&sql(OPEN QoCur)
+		for  
+		{	
+			&sql(FETCH QoCur INTO :id) 
+			quit:(SQLCODE '= 0)
+			set quota = ##class(fishnet.Quota).%OpenId(id)
+			set ^test = quota.value	
+			 set proxyQ = {}
+			 set proxyQ.id = quota.%Id() 
+			 set proxyQ.value = quota.value			 
+			 set proxyQ.startDate = quota.startDate
+			 set proxyQ.endDate = quota.endDate
+			 if (quota.regionResource'="")
+			  {	
+			  	set ^test = quota.regionResource
+				  set proxyQ.regionResource = quota.regionResource.GetProxy()
+				  }
+			 if (quota.company'="")
+			  {	set ^testTwo = 222
+				  set proxyQ.company = quota.company.GetProxy()}
+			do proxy.%Push(proxyQ)
+		}		
+		&sql(CLOSE QoCur)		
+	}
+	catch (ex){
+		set st = ex.AsStatus()
+	}	
+	q proxy.%ToJSON()
+]]></Implementation>
+</Method>
+
+<Method name="QuotaToJSON">
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+ set ^test = ..value_" hello"
+ set proxy = {}
+ //set proxy.id = quota.%Id() 
+ set proxy.value = ..value
+ 
+ set proxy.startDate = ..startDate
+ set proxy.endDate = ..endDate
+ set proxy.regionResource = ..regionResource
+ set proxy.company = ..company
+ 
+ // ... for other property
+ 
+ quit proxy
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^fishnet.QuotaD</DataLocation>
+<DefaultData>QuotaDefaultData</DefaultData>
+<IdLocation>^fishnet.QuotaD</IdLocation>
+<IndexLocation>^fishnet.QuotaI</IndexLocation>
+<StreamLocation>^fishnet.QuotaS</StreamLocation>
+<Data name="QuotaDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>name</Value>
+</Value>
+<Value name="3">
+<Value>region</Value>
+</Value>
+<Value name="4">
+<Value>company</Value>
+</Value>
+<Value name="5">
+<Value>resource</Value>
+</Value>
+<Value name="6">
+<Value>value</Value>
+</Value>
+<Value name="7">
+<Value>startDate</Value>
+</Value>
+<Value name="8">
+<Value>endDate</Value>
+</Value>
+<Value name="9">
+<Value>regionResource</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

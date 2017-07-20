@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="fishnet.TotalQuota">
+<Super>%Persistent</Super>
+<TimeCreated>64483,42406.92903</TimeCreated>
+
+<Property name="value">
+<Type>%Float</Type>
+</Property>
+
+<Property name="startDate">
+<Type>%Date</Type>
+</Property>
+
+<Property name="endDate">
+<Type>%Date</Type>
+</Property>
+
+<Property name="regionResource">
+<Type>fishnet.RegionResource</Type>
+<Cardinality>one</Cardinality>
+<Inverse>limits</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Index name="regionResourceIndex">
+<Properties>regionResource</Properties>
+</Index>
+
+<Method name="SaveTotalQuota">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	try{		
+	$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data,1))  		
+	    // Open object by Id
+	    //set region = ##class(fishnet.Region).%OpenId(data.id,,.st)
+      	// If can't open by Id-create new region
+      	if $$$ISERR(st) set totalq = ##class(fishnet.TotalQuota).%New()
+      	set totalq.value = $ZCONVERT(data.value, "I", "UTF8")
+      	set totalq.startDate = $ZCONVERT(data.startDate, "I", "UTF8")
+      	set totalq.endDate = $ZCONVERT(data.endDate, "I", "UTF8")  
+      	set totalq.regionResource = $ZCONVERT(data.regionResource, "I", "UTF8") 
+		$$$THROWONERROR(st, totalq.%Save())
+	}
+	catch ex{
+		s st=st.AsStatus()
+	}
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^fishnet.TotalQuotaD</DataLocation>
+<DefaultData>TotalQuotaDefaultData</DefaultData>
+<IdLocation>^fishnet.TotalQuotaD</IdLocation>
+<IndexLocation>^fishnet.TotalQuotaI</IndexLocation>
+<StreamLocation>^fishnet.TotalQuotaS</StreamLocation>
+<Data name="TotalQuotaDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>limit</Value>
+</Value>
+<Value name="3">
+<Value>StartLimit</Value>
+</Value>
+<Value name="4">
+<Value>EndLimit</Value>
+</Value>
+<Value name="5">
+<Value>value</Value>
+</Value>
+<Value name="6">
+<Value>startDate</Value>
+</Value>
+<Value name="7">
+<Value>endDate</Value>
+</Value>
+<Value name="8">
+<Value>regionResource</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

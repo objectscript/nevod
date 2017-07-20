@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.1 (Build 792U)" ts="2017-07-19 18:13:47">
+<Class name="fishnet.Company">
+<Super>%Persistent</Super>
+<TimeChanged>64483,65612.551786</TimeChanged>
+<TimeCreated>64481,59280.79863</TimeCreated>
+
+<Property name="name">
+<Type>%String</Type>
+</Property>
+
+<Property name="code">
+<Type>%String</Type>
+</Property>
+
+<Property name="quotas">
+<Type>fishnet.Quota</Type>
+<Cardinality>many</Cardinality>
+<Inverse>company</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Method name="GetCompanyById">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<Implementation><![CDATA[
+	set company = ##class(fishnet.Company).%OpenId(id,,.sc)
+	quit:$$$ISERR(sc) sc
+	set proxy = {}
+	set proxy.id = company.%Id()
+	set proxy.name = company.name
+	set proxy.code = company.code
+	quit proxy.%ToJSON()
+]]></Implementation>
+</Method>
+
+<Method name="GetCompanies">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	
+	set st = $$$OK	
+	try{
+		set proxy = []	
+		&sql(DECLARE CoCur CURSOR FOR 
+		 	 SELECT ID
+		 	 FROM fishnet.Company)	
+		
+		&sql(OPEN CoCur)
+		for  
+		{	
+			&sql(FETCH CoCur INTO :id) 
+			quit:(SQLCODE '= 0)
+			
+			do proxy.%Push(##class(fishnet.Company).%OpenId(id).CompanyToJSON())
+		}		
+		&sql(CLOSE CoCur)		
+	}
+	catch (ex){
+		set st = ex.AsStatus()
+	}	
+	quit proxy.%ToJSON()
+]]></Implementation>
+</Method>
+
+<Method name="SaveRequisetesCompany">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	set st = $$$OK
+		
+	try{	
+	
+	$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data,1))
+      	// Open object by ID
+      	set company = ##class(fishnet.Company).%OpenId(data.id,,.st)    	
+      	// If can't open-create new
+      	if $$$ISERR(st) set company = ##class(fishnet.Company).%New()
+      	set company.name = $ZCONVERT(data.name, "I", "UTF8")
+      	set company.code = $ZCONVERT(data.code, "I", "UTF8")
+      	
+      	// ... for other property
+      	     		
+		$$$THROWONERROR(st, region.%Save())
+	}
+	catch ex{
+		s st=st.AsStatus()
+	}
+]]></Implementation>
+</Method>
+
+<Method name="SaveRegionOfCompany">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	set st = $$$OK		
+	try{		
+	$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data,1))
+      	// Open region by ID
+      	set company = ##class(fishnet.Company).%OpenId(data.id,,.st)    	
+      	// If can't open-create new
+      	if $$$ISERR(st) set company = ##class(fishnet.Company).%New()
+      	do company.region.Clear()
+      	set company.region = $ZCONVERT(data.region, "I", "UTF8")
+      	
+      	// ... for other property
+      	     		
+		$$$THROWONERROR(st, company.%Save())
+	}
+	catch ex{
+		s st=st.AsStatus()
+	}
+]]></Implementation>
+</Method>
+
+<Method name="CompanyToJSON">
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+ set company = $this
+ set proxy = {}
+ set proxy.id = company.%Id() 
+ set proxy.name = company.name
+ set proxy.code = company.code
+ 
+ // ... for other property
+ 
+ quit proxy.%ToJSON()
+]]></Implementation>
+</Method>
+
+<Method name="GetProxy">
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+ set proxy = {}
+ set proxy.id = ..%Id() 
+ set proxy.name = ..name
+ set proxy.code = ..code
+ 
+ quit proxy
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^fishnet.CompanyD</DataLocation>
+<DefaultData>CompanyDefaultData</DefaultData>
+<IdLocation>^fishnet.CompanyD</IdLocation>
+<IndexLocation>^fishnet.CompanyI</IndexLocation>
+<StreamLocation>^fishnet.CompanyS</StreamLocation>
+<Data name="CompanyDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>name</Value>
+</Value>
+<Value name="3">
+<Value>phone</Value>
+</Value>
+<Value name="4">
+<Value>region</Value>
+</Value>
+<Value name="5">
+<Value>code</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

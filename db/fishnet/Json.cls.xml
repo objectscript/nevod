@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="fishnet.Json">
+<TimeCreated>64481,38898.304932</TimeCreated>
+
+<Method name="GetRegionById">
+<Description>
+Получить регион по идентификатору</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  set region = ##class(fishnet.Region).%OpenId(id,,.st)
+  quit:$$$ISERR(st) st 
+  set proxy = region.ConvertToProxyObject()
+  quit proxy.%ToJSON()
+]]></Implementation>
+</Method>
+
+<Method name="GetRegions">
+<Description>
+Получить все регионы</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  set st = $$$OK
+  
+  try
+  {
+    set sql = "SELECT "_
+          "FROM " 
+     
+    // Вывод данных в формате JSON для произвольного sql запроса  
+    do ##class(%ZEN.Auxiliary.jsonSQLProvider).%WriteJSONFromSQL(,sql)
+  }
+  catch (ex){
+    set st = ex.AsStatus()
+  } 
+  quit st
+]]></Implementation>
+</Method>
+
+<Method name="SaveRegion">
+<Description>
+Создать/сохранить регион</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  set st = $$$OK
+  try
+  {
+    // Преобразовали входную строку JSON в объект proxyObject
+    $$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+        // Открываем регион по идентификатору
+        set region = ##class(fishnet.Region).%OpenId(data.id,,.st)
+        // Открыть не удалось - создаем
+        if $$$ISERR(st) set student = ##class(fishnet.Region).%New()   
+        set region.Name = $ZCONVERT(data.GetName, "I", "UTF8")
+        $$$THROWONERROR(st, region.%Save())
+  }
+  catch (ex)
+  {
+    set st = ex.AsStatus()
+  }
+
+  quit st
+]]></Implementation>
+</Method>
+
+<Method name="DeleteRegion">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[  quit ##class(fishnet.Region).%DeleteId(id)
+]]></Implementation>
+</Method>
+</Class>
+</Export>

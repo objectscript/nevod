@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.1 (Build 792U)" ts="2017-07-20 11:22:03">
+<Class name="fishnet.Region">
+<StorageStrategy/>
+<Super>%Persistent</Super>
+<TimeChanged>64484,40908.90541</TimeChanged>
+<TimeCreated>64479,59414.858678</TimeCreated>
+
+<Property name="name">
+<Type>%String</Type>
+</Property>
+
+<Property name="coordinates">
+<Type>fishnet.Coordinate</Type>
+<Collection>list</Collection>
+</Property>
+
+<Property name="code">
+<Type>%String</Type>
+</Property>
+
+<Property name="resources">
+<Type>fishnet.RegionResource</Type>
+<Cardinality>many</Cardinality>
+<Inverse>region</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Method name="GetRegions">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	try{
+		set proxy = []		
+		&sql(DECLARE RgCur CURSOR FOR 
+		 	 SELECT ID
+		 	 FROM fishnet.Region)	
+		
+		&sql(OPEN RgCur)
+		for  
+		{	
+			&sql(FETCH RgCur INTO :id) 
+			quit:(SQLCODE '= 0)			
+			do proxy.%Push(##class(fishnet.Region).%OpenId(id).RegionToJSON())
+		}		
+		&sql(CLOSE RgCur)		 
+	}
+	catch (ex){
+		set st = ex.AsStatus()
+	}
+	
+	quit proxy.%ToJSON()
+]]></Implementation>
+</Method>
+
+<Method name="GetRegion">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set region = ##class(fishnet.Region).%OpenId(id,,.sc)	
+	quit:$$$ISERR(sc) sc	
+	set proxy = {}	
+	set proxy.id = region.%Id()
+	set proxy.name = region.name
+	set proxy.code = region.code	
+	set proxy.coordinates = []	
+	for i=1:1:region.coordinates.Count(){
+		set point = {}
+		set point.longtude = region.coordinates.GetAt(i).longtude
+		set point.latitude = region.coordinates.GetAt(i).latitude		
+		do proxy.coordinates.%Push(point)	
+	}	
+	q proxy.%ToJSON()
+]]></Implementation>
+</Method>
+
+<Method name="SaveRegion">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK		
+	try{		
+	$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data,1))  		
+	    // Open object by Id
+	    set region = ##class(fishnet.Region).%OpenId(data.id,,.st)
+      	// If can't open by Id-create new region
+      	if $$$ISERR(st) set region = ##class(fishnet.Region).%New()
+      	set region.code = $ZCONVERT(data.code, "I", "UTF8")
+      	set region.name = $ZCONVERT(data.name, "I", "UTF8")
+      	do region.coordinates.Clear()
+      	set region.coordinates = $ZCONVERT(data.coordinates, "I", "UTF8")	
+      	for i=1:1:data.coordinates.Count(){
+			set point = ##class(fishnet.Coordinate).%New()
+			set point.longtude = data.coordinates.GetAt(i).longtude
+			set point.latitude = data.coordinates.GetAt(i).latitude		
+			do region.coordinates.Insert(point)
+      	}
+		$$$THROWONERROR(st, region.%Save())
+	}
+	catch ex{
+		s st=st.AsStatus()
+	}
+]]></Implementation>
+</Method>
+
+<Method name="RegionToJSON">
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+ set region = $this
+ set proxy = {}
+ set proxy.id = region.%Id()
+ set proxy.name = region.name
+ set proxy.code = region.code
+ set proxy.coordinates = []
+ for i=1:1:region.coordinates.Count(){
+ 	set point = {}
+ 	set point.longtude = region.coordinates.GetAt(i).longtude
+	set point.latitude = region.coordinates.GetAt(i).latitude		
+ 	do proxy.coordinates.%Push(point)	
+ }	
+ quit proxy.%ToJSON()
+]]></Implementation>
+</Method>
+
+<Method name="SetPointForRegion">
+<FormalSpec>latitude:%Decimal,longtude:%Decimal</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+ set coord = ##class(fishnet.Coordinate).%New()
+ set coord.latitude = latitude
+ 	set coord.longtude = longtude
+ 	do ..coordinates.Insert(coord)
+ 	do ..%Save()
+]]></Implementation>
+</Method>
+
+<Method name="DeleteRegion">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	do ##class(fishnet.Region).%DeleteId(id)
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^fishnet.RegionD</DataLocation>
+<DefaultData>RegionDefaultData</DefaultData>
+<IdLocation>^fishnet.RegionD</IdLocation>
+<IndexLocation>^fishnet.RegionI</IndexLocation>
+<StreamLocation>^fishnet.RegionS</StreamLocation>
+<Data name="RegionDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>name</Value>
+</Value>
+<Value name="3">
+<Value>coordinates</Value>
+</Value>
+<Value name="4">
+<Value>resource</Value>
+</Value>
+<Value name="5">
+<Value>code</Value>
+</Value>
+<Value name="6">
+<Value>resourcies</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

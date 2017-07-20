@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="fishnet.RegionResource">
+<Super>%Persistent</Super>
+<TimeCreated>64482,57980.141608</TimeCreated>
+
+<Property name="region">
+<Type>fishnet.Region</Type>
+<Cardinality>one</Cardinality>
+<Inverse>resources</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Index name="regionIndex">
+<Properties>region</Properties>
+</Index>
+
+<Property name="resource">
+<Type>fishnet.Resource</Type>
+<Cardinality>one</Cardinality>
+<Inverse>regions</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Index name="resourceIndex">
+<Properties>resource</Properties>
+</Index>
+
+<Property name="limits">
+<Type>fishnet.TotalQuota</Type>
+<Cardinality>many</Cardinality>
+<Inverse>regionResource</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Method name="SetResourceForRegion">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idReg:%String,idRes:%String</FormalSpec>
+<Implementation><![CDATA[
+	set regionRes = ##class(fishnet.RegionResource).%New()
+	set regionRes.region = ##class(fishnet.Region).%OpenId(idReg)
+	set regionRes.resource = ##class(fishnet.Resource).%OpenId(idRes)	 
+	q regionRes.%Save()
+]]></Implementation>
+</Method>
+
+<Method name="GetAllResForReg">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idReg:%String</FormalSpec>
+<Implementation><![CDATA[
+	
+	set sql = "SELECT resource->ID, resource->code, resource->name "_
+		"FROM fishnet.RegionResource "_
+		"WHERE region->ID ="_idReg_""
+	q ##class(%ZEN.Auxiliary.jsonSQLProvider).%WriteJSONFromSQL(,sql)
+]]></Implementation>
+</Method>
+
+<Method name="DelResource">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idReg:%String,idRes:%String</FormalSpec>
+<Implementation><![CDATA[
+	 &sql(DELETE 
+	 FROM fishnet.RegionResource 
+	 WHERE region->ID=:idReg AND resource->ID=:idRes)
+]]></Implementation>
+</Method>
+
+<Method name="GetProxy">
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+
+ set proxy = {}
+ set proxy.id = ..%Id()
+
+	
+ set proxy.region={}
+ set proxy.region.id = ..region.%Id()
+ set proxy.region.name = ..region.name
+ set proxy.region.code = ..region.code
+ 	
+
+ set proxy.resource={}
+ set proxy.resource.id = ..resource.%Id()
+ set proxy.resource.name = ..resource.name
+ set proxy.resource.code = ..resource.code
+ 		set ^test(4)= 1
+
+ quit proxy
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[
+/* Method GetResourceForRegion()
+{
+	set region = $this	
+	quit:$$$ISERR(sc) sc	
+	set proxy = {}	
+	set proxy.name = region.name	
+	set proxy.resourcies = []	
+	for i=1:1:region.resourcies.Count(){
+		set res = {}
+		set res.name = region.resourcies.GetAt(i).name
+		set res.code = region.resourcies.GetAt(i).code		
+		do proxy.resourcies.%Push(point)	
+	}	
+	quit proxy.%ToJSON()
+} */
+]]></Content>
+</UDLText>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^fishnet.RegionResourceD</DataLocation>
+<DefaultData>RegionResourceDefaultData</DefaultData>
+<IdLocation>^fishnet.RegionResourceD</IdLocation>
+<IndexLocation>^fishnet.RegionResourceI</IndexLocation>
+<StreamLocation>^fishnet.RegionResourceS</StreamLocation>
+<Data name="RegionResourceDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>quotaId</Value>
+</Value>
+<Value name="3">
+<Value>regions</Value>
+</Value>
+<Value name="4">
+<Value>resourcies</Value>
+</Value>
+<Value name="5">
+<Value>limit</Value>
+</Value>
+<Value name="6">
+<Value>StartLimit</Value>
+</Value>
+<Value name="7">
+<Value>EndLimit</Value>
+</Value>
+<Value name="8">
+<Value>limits</Value>
+</Value>
+<Value name="9">
+<Value>resources</Value>
+</Value>
+<Value name="10">
+<Value>region</Value>
+</Value>
+<Value name="11">
+<Value>resource</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

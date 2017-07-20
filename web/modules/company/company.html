@@ -1,0 +1,42 @@
+<div class="container">
+    <div class="row">
+
+        <div class="row">
+            <div class="col-sm-2">
+                <h4><label for="name">Компания</label>
+                    <h3>
+                        <p ng-bind=company.name id="name"></p>
+
+            </div>
+            <div class="col-sm-1">
+                <h4><label for="code">Код</label>
+                    <h3>
+                        <p ng-bind=company.code id="code"></p>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="row">
+        <div map-lazy-load="https://maps.google.com/maps/api/js" map-lazy-load-params="{{googleMapsUrl}}" class="col-md-8">
+            <!-- style="height:500px;"> -->
+            <ng-map center="41,-87" zoom="3">
+            </ng-map>
+        </div>
+    </div>
+
+
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label for="usr">Id:</label>
+            <input type="text" ng-model="id" class="form-control" id="usr"></input>
+        </div>
+        <button type="button" class="btn btn-default" ng-click="openPolygon()" ng-if="regionEdit">Открыть</button>
+        <button type="button" class="btn btn-primary" ng-click="savePolygon()">Сохранить</button>
+        <button type="button" class="btn btn-success" ng-click="deletePolygon()" ng-if="regionEdit">Удалить</button>
+        <button type="button" class="btn btn-info" ng-click="editPolygon()">Редактировать</button>
+        <button type="button" class="btn btn-warning" ng-click="createPolygon()" ng-if="regionEdit">Создать</button>
+    </div>
+
+</div>
+</div>
